@@ -49,10 +49,13 @@ A personal weightlifting app for iPhone, for one user. It runs a multi-week trai
 - **Program editor**: weeks → days → exercises → sets, reps, rest. Copy week, copy day, reorder.
 
 ### Exercise history
-- Pick an exercise → every session you did it, newest first, with sets, best set, and the date.
+- History tab opens on the **exercise list**: each exercise you've done, with its last date, best set, and session count.
+- Pick an exercise → every session you did it, newest first (e.g. "80 kg × 5, 5, 5").
+- Tap a session → **edit** that past workout (weights, reps, sets, done/not done) or **delete** it.
 
 ### Settings
-- Units (kg/lb), default rest time, manage custom exercises.
+- Units (kg/lb), default rest time.
+- **My Exercises**: rename custom exercises; delete only if unused (so history never breaks).
 - **Export backup** (saves a file to Files/iCloud Drive) and **Import backup**.
 
 ## 4. Rules
@@ -60,7 +63,8 @@ A personal weightlifting app for iPhone, for one user. It runs a multi-week trai
 - **Recommendation:** if every planned working set of an exercise was completed at or above its target reps, recommend *last weight + that exercise's increment* next time. Otherwise, recommend the same weight.
 - **Next workout:** the first uncompleted day in the active program, in order.
 - **End of block:** show a **block summary** (sessions completed, PRs, total volume, consistency), then offer to **repeat the block with updated weights** (from the recommendations).
-- Unit conversion is for display only; data is stored in kg.
+- Unit conversion is for display only; data is stored in kg. Display rounding: kg to 0.25, lb to 0.5.
+- Tapping the tab you're already on returns to that tab's main screen (iOS convention).
 
 ## 5. Look and feel
 
@@ -77,7 +81,7 @@ A personal weightlifting app for iPhone, for one user. It runs a multi-week trai
 1. ✅ **Foundation**: project skeleton, CLAUDE.md, data model, storage, tests.
 2. ✅ **Program editor**: create a multi-week program.
 3. ✅ **Run a workout**: start the next day, prefilled sets, ✓, rest timer, last time, recommendations.
-4. **Exercise history** + export/import backup.
+4. ✅ **Exercise history** + export/import backup.
 5. **Block summary** + repeat block.
 6. Install on iPhone (Home Screen), polish.
 7. *(Later)* Capacitor native app.

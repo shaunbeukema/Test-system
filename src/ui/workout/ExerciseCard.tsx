@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import type { Exercise, SetLog, WeightUnit, WorkoutExercise } from '../../core/types';
-import { formatDuration, formatWeight, kgToUnit, roundTo, unitToKg } from '../../core/units';
+import { displayWeight, formatWeight, unitToKg } from '../../core/units';
+import { describeSet, summarizeSets } from '../format';
 import { NumberCell } from '../components/NumberCell';
 import { Stepper } from '../components/Stepper';
 
@@ -11,6 +12,8 @@ interface Props {
   lastSets?: SetLog[];
   needsWeight: boolean;
   unit: WeightUnit;
+  /** Hide the "Last" column and line (e.g. when editing a past workout). */
+  hideLast?: boolean;
   onUpdateSet: (setIndex: number, patch: Partial<SetLog>) => void;
   onToggleSet: (setIndex: number) => void;
   onSetStartingWeight: (weightKg: number) => void;
@@ -20,15 +23,16 @@ interface Props {
 }
 
 export function ExerciseCard(props: Props) {
-  const { entry, exercise, lastSets, needsWeight, unit } = props;
+  const { entry, exercise, needsWeight, unit } = props;
+  const lastSets = props.hideLast ? undefined : props.lastSets;
   const type = exercise?.type ?? 'weight';
   const [menuOpen, setMenuOpen] = useState(false);
   const allDone = entry.sets.length > 0 && entry.sets.every((s) => s.completed);
 
-  const toUnit = (kg: number | undefined) => (kg === undefined ? undefined : roundTo(kgToUnit(kg, unit), 0.25));
+  const toUnit = (kg: number | undefined) => (kg === undefined ? undefined : displayWeight(kg, unit));
   const fromUnit = (v: number | undefined) => (v === undefined ? undefined : unitToKg(v, unit));
 
-  const lastSummary = summarizeLast(lastSets, type, unit);
+  const lastSummary = summarizeSets(lastSets, type, unit);
 
   return (
     <section className={`ex-card${allDone ? ' ex-card-done' : ''}`}>
@@ -42,7 +46,7 @@ export function ExerciseCard(props: Props) {
         </button>
       </header>
 
-      {entry.suggestion?.increase && (
+      {!props.hideLast && entry.suggestion?.increase && (
         <div className="badge-up num">↑ Try {formatWeight(entry.suggestion.weightKg, unit)}: you hit every target last time</div>
       )}
 
@@ -61,7 +65,7 @@ export function ExerciseCard(props: Props) {
           <thead>
             <tr>
               <th>Set</th>
-              <th>Last</th>
+              {!props.hideLast && <th>Last</th>}
               {type === 'weight' && <th>{unit}</th>}
               {type === 'bodyweight' && <th>+{unit}</th>}
               {(type === 'weight' || type === 'bodyweight') && <th>Reps</th>}
@@ -75,7 +79,7 @@ export function ExerciseCard(props: Props) {
             {entry.sets.map((set, i) => (
               <tr key={i} className={set.completed ? 'set-done' : undefined}>
                 <td className="set-num num">{i + 1}</td>
-                <td className="set-last num">{lastSets?.[i] ? describeSet(lastSets[i], type, unit, true) : '—'}</td>
+                {!props.hideLast && <td className="set-last num">{lastSets?.[i] ? describeSet(lastSets[i], type, unit, true) : '—'}</td>}
                 {(type === 'weight' || type === 'bodyweight') && (
                   <td>
                     <NumberCell label={`Set ${i + 1} weight`} decimals value={toUnit(set.weightKg)} onChange={(v) => props.onUpdateSet(i, { weightKg: fromUnit(v) })} />
@@ -155,29 +159,4 @@ function StartingWeight({ unit, onSet }: { unit: WeightUnit; onSet: (kg: number)
       </button>
     </div>
   );
-}
-
-/** "80 kg × 5, 5, 5" when every set used the same weight; otherwise each set in full. */
-function summarizeLast(sets: SetLog[] | undefined, type: Exercise['type'], unit: WeightUnit): string | undefined {
-  const done = sets?.filter((s) => s.completed);
-  if (!done?.length) return undefined;
-  const sameWeight = done.every((s) => s.weightKg === done[0].weightKg);
-  if (type === 'weight' && sameWeight && done[0].weightKg !== undefined) {
-    return `${formatWeight(done[0].weightKg, unit)} × ${done.map((s) => s.reps ?? 0).join(', ')}`;
-  }
-  return done.map((s) => describeSet(s, type, unit)).join(', ');
-}
-
-function describeSet(s: SetLog, type: Exercise['type'], unit: WeightUnit, short = false): string {
-  const w = s.weightKg !== undefined ? roundTo(kgToUnit(s.weightKg, unit), 0.25) : undefined;
-  switch (type) {
-    case 'weight':
-      return w !== undefined ? `${w}${short ? '' : ` ${unit}`} × ${s.reps ?? 0}` : `${s.reps ?? 0}`;
-    case 'bodyweight':
-      return w ? `+${w} × ${s.reps ?? 0}` : `${s.reps ?? 0}`;
-    case 'timed':
-      return formatDuration(s.durationSec ?? 0);
-    case 'cardio':
-      return s.distanceM ? `${formatDuration(s.durationSec ?? 0)} · ${s.distanceM / 1000}km` : formatDuration(s.durationSec ?? 0);
-  }
 }

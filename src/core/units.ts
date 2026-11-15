@@ -15,10 +15,14 @@ export function roundTo(value: number, step: number): number {
   return Math.round(Math.round(value / step) * step * 1000) / 1000;
 }
 
+/** A stored kg value as a display number in the chosen unit (kg to 0.25, lb to 0.5). The one rounding rule for every screen. */
+export function displayWeight(kg: number, unit: WeightUnit): number {
+  return roundTo(kgToUnit(kg, unit), unit === 'kg' ? 0.25 : 0.5);
+}
+
 /** Format a stored kg value for display, e.g. "82.5 kg" or "180 lb". */
 export function formatWeight(kg: number, unit: WeightUnit): string {
-  const value = roundTo(kgToUnit(kg, unit), unit === 'kg' ? 0.25 : 0.5);
-  return `${value} ${unit}`;
+  return `${displayWeight(kg, unit)} ${unit}`;
 }
 
 /** Format seconds as m:ss, e.g. 90 -> "1:30". */

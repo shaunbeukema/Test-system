@@ -2,8 +2,9 @@ import { useState, type ReactNode } from 'react';
 import type { Workout } from './core/types';
 import { HistoryIcon, HomeIcon, ProgramIcon, SettingsIcon } from './ui/icons';
 import { HomeScreen } from './ui/screens/HomeScreen';
-import { Placeholder } from './ui/screens/Placeholder';
+import { HistoryScreen } from './ui/screens/HistoryScreen';
 import { ProgramsScreen } from './ui/screens/ProgramsScreen';
+import { SettingsScreen } from './ui/screens/SettingsScreen';
 import { WorkoutScreen } from './ui/workout/WorkoutScreen';
 
 type Tab = 'home' | 'programs' | 'history' | 'settings';
@@ -21,7 +22,11 @@ export default function App() {
   const [workout, setWorkout] = useState<Workout>();
   const [toast, setToast] = useState<string>();
 
+  // Bumped on every tab tap so tapping the current tab returns to its main screen (like iOS).
+  const [tabKey, setTabKey] = useState(0);
+
   const goTo = (next: Tab) => {
+    setTabKey((k) => k + 1);
     setCreateFromHome(false);
     setToast(undefined);
     setTab(next);
@@ -48,6 +53,7 @@ export default function App() {
     <div className="app">
       {tab === 'home' && (
         <HomeScreen
+          key={tabKey}
           toast={toast}
           onStartWorkout={(w) => {
             setToast(undefined);
@@ -60,9 +66,9 @@ export default function App() {
           }}
         />
       )}
-      {tab === 'programs' && <ProgramsScreen startCreating={createFromHome} />}
-      {tab === 'history' && <Placeholder title="History" note="Per-exercise history arrives in Phase 4." />}
-      {tab === 'settings' && <Placeholder title="Settings" note="Units, rest time and backups arrive in Phase 4." />}
+      {tab === 'programs' && <ProgramsScreen key={tabKey} startCreating={createFromHome} />}
+      {tab === 'history' && <HistoryScreen key={tabKey} />}
+      {tab === 'settings' && <SettingsScreen key={tabKey} />}
 
       <nav className="tabbar" aria-label="Main">
         <div className="tabbar-inner">

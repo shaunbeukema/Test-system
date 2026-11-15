@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { type Shorthand } from '../../core/programEdit';
 import type { Exercise, WeightUnit } from '../../core/types';
-import { formatDuration, kgToUnit, roundTo, unitToKg } from '../../core/units';
+import { displayWeight, formatDuration, unitToKg } from '../../core/units';
 import { Sheet } from '../components/Sheet';
 import { Stepper } from '../components/Stepper';
 
@@ -21,7 +21,7 @@ export function PlannedExerciseSheet({ exercise, initial, unit, isNew, onSave, o
   const set = (patch: Partial<Shorthand>) => setValue((v) => ({ ...v, ...patch }));
 
   const weightStep = unit === 'kg' ? 2.5 : 5;
-  const displayWeight = value.weightKg === undefined ? undefined : roundTo(kgToUnit(value.weightKg, unit), 0.25);
+  const shownWeight = value.weightKg === undefined ? undefined : displayWeight(value.weightKg, unit);
   const setWeight = (w: number | undefined) => set({ weightKg: w === undefined ? undefined : unitToKg(w, unit) });
 
   const { type } = exercise;
@@ -62,7 +62,7 @@ export function PlannedExerciseSheet({ exercise, initial, unit, isNew, onSave, o
         {type !== 'cardio' && (
           <Stepper
             label={`${weightLabel} (optional)`}
-            value={displayWeight}
+            value={shownWeight}
             step={weightStep}
             decimals
             optional

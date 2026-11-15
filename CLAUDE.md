@@ -22,14 +22,14 @@ A personal weightlifting app for iPhone, built as a Progressive Web App (install
 ## Architecture (keep these boundaries)
 
 - `src/core/`: **pure logic and types**. No React, no browser APIs except `crypto.randomUUID`. Every rule lives here with tests next to it (`*.test.ts`). This layer must stay portable (Capacitor now, possibly Swift later).
-  - `types.ts` data model · `progression.ts` last-time + weight recommendation · `program.ts` next day / copy week · `units.ts` kg/lb + formatting · `programEdit.ts` program editing · `workout.ts` live workout (sets, rest timer, recorded rest) · `exercises.ts` built-in list · `backup.ts` export format · `storage.ts` the `Storage` interface
+  - `types.ts` data model · `progression.ts` last-time + weight recommendation · `program.ts` next day / copy week · `units.ts` kg/lb + formatting · `programEdit.ts` program editing · `workout.ts` live workout (sets, rest timer, recorded rest) · `history.ts` exercise sessions, best set, usage checks · `exercises.ts` built-in list · `backup.ts` export format · `storage.ts` the `Storage` interface
 - `src/storage/`: `Storage` implementations (`DexieStorage` = IndexedDB). The UI never touches IndexedDB directly.
 - `src/ui/`: React screens and components. `ui/storage.ts` holds the single storage instance.
 - `src/index.css`: theme tokens and styles.
 
 ## Rules
 
-- Store all weights in **kg**; convert only for display (`units.ts`).
+- Store all weights in **kg**; convert only for display with `displayWeight`/`formatWeight` in `units.ts` (one rounding rule everywhere).
 - Built-in exercise IDs are stable slugs. Never rename them (saved data references them).
 - Weight recommendation: every planned set completed at or above its target reps → last top-set weight + increment; otherwise the same weight. Never lower it automatically.
 - Changes to the backup format must bump `BACKUP_VERSION` and stay able to read older versions.
@@ -40,4 +40,4 @@ Apple-like layout with a rugged feel: off-white `--bg`, charcoal/graphite surfac
 
 ## Build phases
 
-See docs/SPEC.md section 6. Phases 1–3 (foundation, program editor, running a workout) are done; Phase 4 is exercise history + backup.
+See docs/SPEC.md section 6. Phases 1–4 (foundation, program editor, running a workout, history + backup) are done; Phase 5 is the block summary + repeat block.

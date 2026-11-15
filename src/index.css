@@ -1006,3 +1006,57 @@ ol.list.plain {
     background: #1d4a75;
   }
 }
+
+/* ---------- History & Settings ---------- */
+.session-sets {
+  color: var(--ink-2);
+  font-weight: 600;
+}
+
+.edit-hint {
+  margin: -12px 0 16px;
+}
+
+.segmented-2 {
+  grid-template-columns: repeat(2, 1fr);
+  margin-bottom: 0;
+}
+
+.segment-lg {
+  min-height: 44px;
+  font-size: 15px;
+}
+
+.backup-card .btn + .btn {
+  margin-top: 10px;
+}
+
+.backup-text {
+  margin: 0 0 14px;
+  line-height: 1.45;
+  color: var(--ink-2);
+}
+
+.backup-msg {
+  margin: 12px 0 0;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.backup-msg-error {
+  color: #b3261e;
+}
+
+.row-actions-inline {
+  display: flex;
+  gap: 4px;
+}
+
+.link-btn.danger {
+  color: #b3261e;
+}
+
+.about {
+  margin-top: 28px;
+  text-align: center;
+}
