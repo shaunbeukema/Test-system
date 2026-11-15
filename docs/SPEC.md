@@ -73,8 +73,8 @@ A personal weightlifting app for iPhone, for one user. It runs a multi-week trai
 
 ## 6. Build phases
 
-1. **Foundation**: project skeleton, CLAUDE.md, data model, storage, tests.
-2. **Program editor**: create a multi-week program.
+1. ✅ **Foundation**: project skeleton, CLAUDE.md, data model, storage, tests.
+2. ✅ **Program editor**: create a multi-week program.
 3. **Run a workout**: start the next day, prefilled sets, ✓, rest timer, last time, recommendations.
 4. **Exercise history** + export/import backup.
 5. **Block summary** + repeat block.

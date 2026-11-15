@@ -39,4 +39,4 @@ Apple-like layout with a rugged feel: off-white `--bg`, charcoal/graphite surfac
 
 ## Build phases
 
-See docs/SPEC.md section 6. Phase 1 (foundation) is done; Phase 2 is the program editor.
+See docs/SPEC.md section 6. Phases 1 (foundation) and 2 (program editor) are done; Phase 3 is running a workout.
