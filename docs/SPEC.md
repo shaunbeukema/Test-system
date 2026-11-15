@@ -1,4 +1,4 @@
-# Liftr: Design Spec (draft v0.1)
+# Liftr: Design Spec (draft v0.2)
 
 A personal weightlifting app for iPhone, for one user. It runs a multi-week training program, logs every set quickly, and recommends when to add weight.
 
@@ -63,7 +63,11 @@ A personal weightlifting app for iPhone, for one user. It runs a multi-week trai
 
 ## 5. Look and feel
 
-- Clean, light, Apple-style; system font; generous spacing.
+- **Apple-like, with a rugged, masculine feel.** iOS layout and conventions (system font, clean spacing, familiar navigation), but with more weight:
+  - Light base (off-white) with **charcoal/graphite** surfaces and text; one strong accent color for actions.
+  - **Bold, heavy type** for headings and numbers (weights, reps, timer); tabular figures so numbers line up.
+  - Tighter corner radii (squarer, more "steel plate" than "bubbly"); solid fills over soft gradients.
+  - Minimal decoration; no pastels or playful illustrations.
 - Large tap targets (at least 44 pt) for gym use.
 - Bottom tabs: **Home · Programs · History · Settings**.
 
@@ -81,7 +85,7 @@ A personal weightlifting app for iPhone, for one user. It runs a multi-week trai
 
 Progress charts, calendar view, supersets, RPE, notes, cloud sync, multiple users.
 
-## 8. Open questions
+## 8. Resolved decisions
 
-- Which built-in exercises should be preloaded? (Default: about 30 common lifts.)
-- Should a missed recommendation (a failed set) ever recommend *lowering* the weight?
+- **Built-in exercises:** about 30 common lifts preloaded; custom exercises can be added.
+- **Missed reps:** keep the same weight next time (never auto-lower).
