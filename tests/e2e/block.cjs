@@ -11,7 +11,8 @@ const URL = process.env.LIFTR_URL || 'http://localhost:4173/';
   const errors = [];
   p.on('pageerror', (e) => errors.push(e.message));
   p.on('console', (m) => m.type() === 'error' && errors.push(m.text()));
-  p.on('dialog', (d) => d.accept());
+  p.on('dialog', (d) => { errors.push('Unexpected browser pop-up: ' + d.message()); d.dismiss(); });
+  const accept = async () => { await p.locator('.dialog .dialog-btn.strong').click(); await p.locator('.dialog').waitFor({ state: 'detached' }); };
   const tab = (name) => p.getByRole('navigation', { name: 'Main' }).getByRole('button', { name });
   const log = (...a) => console.log('✓', ...a);
   const fill = async (loc, v) => { await loc.fill(String(v)); await loc.blur(); };
@@ -46,7 +47,7 @@ const URL = process.env.LIFTR_URL || 'http://localhost:4173/';
     }
     const weight = await bench.getByRole('textbox', { name: 'Set 1 weight' }).inputValue();
     await bench.getByRole('button', { name: 'Complete set 1' }).click();
-    await p.getByRole('button', { name: 'Finish' }).click();
+    await p.getByRole('button', { name: 'Finish' }).click(); await accept();
     return weight;
   }
 
@@ -57,7 +58,7 @@ const URL = process.env.LIFTR_URL || 'http://localhost:4173/';
   await p.clock.runFor(86400_000);
   // Skip Day B
   expect((await startSub()).includes('Day 2: B'), 'next is B');
-  await p.getByRole('button', { name: 'Skip this day' }).click();
+  await p.getByRole('button', { name: 'Skip this day' }).click(); await accept();
   await p.getByText('Skipped B').waitFor();
   console.log('  program card:', await p.locator('.card').first().innerText());
   log('skipped B →', await startSub());
@@ -84,12 +85,12 @@ const URL = process.env.LIFTR_URL || 'http://localhost:4173/';
   console.log(`  weights: A=${wA} C=${wC} → repeated A=${wA2} | ${badge}`);
   expect(wA2 === '65', 'keeps progressing (60 → 62.5 → 65)');
   log('repeat keeps progressing');
-  await p.getByRole('button', { name: 'Discard Workout' }).click();
+  await p.getByRole('button', { name: 'Discard Workout' }).click(); await accept();
 
   // Skip all three → summary 0/3, Done → Home card offers Repeat
   for (let i = 0; i < 3; i++) {
     await p.locator('.start-btn:not([disabled])').waitFor();
-    await p.getByRole('button', { name: 'Skip this day' }).click();
+    await p.getByRole('button', { name: 'Skip this day' }).click(); await accept();
     if (i < 2) await p.getByText(/^✓ Skipped/).waitFor();
   }
   await p.getByText('Block complete').first().waitFor();

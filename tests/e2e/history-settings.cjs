@@ -10,14 +10,10 @@ const URL = process.env.LIFTR_URL || 'http://localhost:4173/';
   const p = await ctx.newPage();
   await p.clock.install({ time: new Date('2026-11-16T18:00:00') });
   const errors = [];
-  const dialogs = [];
   p.on('pageerror', (e) => errors.push(e.message));
   p.on('console', (m) => m.type() === 'error' && errors.push(m.text()));
-  p.on('dialog', (d) => {
-    dialogs.push(d.message());
-    if (d.type() === 'prompt') d.accept('Landmine Press (Barbell)');
-    else d.accept();
-  });
+  p.on('dialog', (d) => { errors.push('Unexpected browser pop-up: ' + d.message()); d.dismiss(); });
+  const accept = async () => { await p.locator('.dialog .dialog-btn.strong').click(); await p.locator('.dialog').waitFor({ state: 'detached' }); };
   const tab = (name) => p.getByRole('navigation', { name: 'Main' }).getByRole('button', { name });
   const log = (...a) => console.log('✓', ...a);
   const fill = async (loc, v) => { await loc.fill(String(v)); await loc.blur(); };
@@ -56,7 +52,7 @@ const URL = process.env.LIFTR_URL || 'http://localhost:4173/';
       await unused.getByRole('button', { name: 'Unused Lift options' }).click();
       await unused.getByRole('button', { name: 'Remove Exercise' }).click();
     }
-    await p.getByRole('button', { name: 'Finish' }).click();
+    await p.getByRole('button', { name: 'Finish' }).click(); await accept();
     await p.locator('.toast').waitFor();
   }
 
@@ -108,9 +104,13 @@ const URL = process.env.LIFTR_URL || 'http://localhost:4173/';
   const mine = await p.locator('.list-row span:first-child').allTextContents();
   console.log('  my exercises:', mine.join(', '));
   await p.locator('.list-row', { hasText: 'Landmine Press' }).getByRole('button', { name: 'Delete' }).click();
-  expect(dialogs.at(-1).includes('can’t be deleted'), 'used exercise protected');
+  expect((await p.locator('.dialog-title').textContent()).includes('Can’t delete'), 'used exercise protected');
+  await accept();
   await p.locator('.list-row', { hasText: 'Unused Lift' }).getByRole('button', { name: 'Delete' }).click();
+  await accept();
   await p.locator('.list-row', { hasText: 'Landmine Press' }).getByRole('button', { name: 'Rename' }).click();
+  await p.locator('#dialog-input').fill('Landmine Press (Barbell)');
+  await accept();
   await p.getByText('Landmine Press (Barbell)').waitFor();
   const after = await p.locator('.list-row span:first-child').allTextContents();
   expect(after.length === 1 && after[0] === 'Landmine Press (Barbell)', 'unused deleted + renamed: ' + after);
@@ -127,12 +127,13 @@ const URL = process.env.LIFTR_URL || 'http://localhost:4173/';
   await tab('History').click();
   await p.getByRole('button', { name: /Bench Press/ }).click();
   await p.locator('.list-row').first().click();
-  await p.getByRole('button', { name: 'Delete Workout' }).click();
+  await p.getByRole('button', { name: 'Delete Workout' }).click(); await accept();
   await p.waitForFunction(() => document.querySelectorAll('.session-sets').length === 1, null, { timeout: 5000 });
   log('deleted a workout (1 session left)');
 
   await tab('Settings').click();
   await p.getByLabel('Backup file').setInputFiles(file);
+  await accept();
   await p.locator('.backup-msg').waitFor();
   console.log('  restore message:', await p.locator('.backup-msg').textContent());
   await tab('History').click();

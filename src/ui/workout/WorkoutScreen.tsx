@@ -22,6 +22,7 @@ import { storage } from '../storage';
 import { ExerciseCard } from './ExerciseCard';
 import { RestBar } from './RestBar';
 import { useNow } from './useNow';
+import { ask } from '../dialog';
 
 interface Props {
   initial: Workout;
@@ -62,10 +63,10 @@ export function WorkoutScreen({ initial, onDone }: Props) {
 
   const finish = async () => {
     if (completedSetCount(workout) === 0) {
-      if (confirm('No sets completed. Discard this workout?')) await discard();
+      if (await ask({ title: 'Discard workout?', message: 'No sets are ticked, so there’s nothing to save.', confirmLabel: 'Discard', destructive: true })) await discard();
       return;
     }
-    if (!confirm('Finish workout?')) return;
+    if (!(await ask({ title: 'Finish workout?', message: `${completedSetCount(workout)} sets done.`, confirmLabel: 'Finish' }))) return;
     const finished = finishWorkout(workout);
     await storage.saveWorkout(finished);
     onDone('Workout saved', finished);
@@ -119,7 +120,7 @@ export function WorkoutScreen({ initial, onDone }: Props) {
       <button type="button" className="btn btn-secondary btn-block spaced" onClick={() => setPicking(true)}>
         + Add Exercise
       </button>
-      <button type="button" className="btn btn-danger-text btn-block" onClick={() => confirm('Discard this workout? Nothing will be saved.') && discard()}>
+      <button type="button" className="btn btn-danger-text btn-block" onClick={async () => (await ask({ title: 'Discard workout?', message: 'Nothing from this session will be saved.', confirmLabel: 'Discard', destructive: true })) && discard()}>
         Discard Workout
       </button>
 

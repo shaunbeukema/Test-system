@@ -10,7 +10,8 @@ const URL = process.env.LIFTR_URL || 'http://localhost:4173/';
   const errors = [];
   p.on('pageerror', e => errors.push(e.message));
   p.on('console', m => m.type() === 'error' && errors.push(m.text()));
-  p.on('dialog', d => d.accept());
+  p.on('dialog', (d) => { errors.push('Unexpected browser pop-up: ' + d.message()); d.dismiss(); });
+  const accept = async () => { await p.locator('.dialog .dialog-btn.strong').click(); await p.locator('.dialog').waitFor({ state: 'detached' }); };
   const log = (...a) => console.log('✓', ...a);
   const blurFill = async (name, v) => { const l = p.getByRole('textbox', { name, exact: true }); await l.fill(String(v)); await l.blur(); };
 
@@ -69,7 +70,7 @@ const URL = process.env.LIFTR_URL || 'http://localhost:4173/';
   const plank = p.locator('.ex-card', { hasText: 'Plank' });
   await plank.getByRole('button', { name: 'Complete set 1' }).click();
   await plank.getByRole('button', { name: 'Complete set 2' }).click();
-  await p.getByRole('button', { name: 'Finish' }).click();
+  await p.getByRole('button', { name: 'Finish' }).click(); await accept();
   console.log('  toast:', await p.locator('.toast').textContent());
   console.log('  next:', await p.locator('.start-sub').textContent());
 

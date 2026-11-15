@@ -6,6 +6,7 @@ import { readBackupFile, saveBackupFile } from '../backupFile';
 import { NavBar } from '../components/NavBar';
 import { Stepper } from '../components/Stepper';
 import { storage } from '../storage';
+import { ask, askText, tell } from '../dialog';
 
 type Loaded = [Settings, Exercise[], Workout[], Program[]];
 
@@ -57,7 +58,7 @@ export function SettingsScreen() {
     try {
       const backup = await readBackupFile(file);
       const when = new Date(backup.exportedAt).toLocaleDateString();
-      if (!confirm(`Restore the backup from ${when}? This replaces all data on this phone (${backup.workouts.length} workouts, ${backup.programs.length} programs).`)) return;
+      if (!(await ask({ title: `Restore backup from ${when}?`, message: `This replaces everything on this phone with ${backup.workouts.length} workouts and ${backup.programs.length} programs.`, confirmLabel: 'Restore', destructive: true }))) return;
       await storage.importAll(backup);
       show(await loadAll());
       setMessage({ text: `Restored ${backup.workouts.length} workouts and ${backup.programs.length} programs.` });
@@ -176,9 +177,9 @@ function MyExercises({ exercises, isUsed, onRename, onDelete, onBack }: MyExerci
                   <button
                     type="button"
                     className="link-btn"
-                    onClick={() => {
-                      const name = prompt('Rename exercise', e.name)?.trim();
-                      if (name && name !== e.name) void onRename(e, name);
+                    onClick={async () => {
+                      const name = await askText('Rename exercise', 'Exercise name', e.name);
+                      if (name && name !== e.name) await onRename(e, name);
                     }}
                   >
                     Rename
@@ -186,11 +187,11 @@ function MyExercises({ exercises, isUsed, onRename, onDelete, onBack }: MyExerci
                   <button
                     type="button"
                     className="link-btn danger"
-                    onClick={() => {
+                    onClick={async () => {
                       if (isUsed(e.id)) {
-                        alert(`“${e.name}” is used in a program or workout, so it can’t be deleted (your history would break). You can rename it instead.`);
-                      } else if (confirm(`Delete “${e.name}”?`)) {
-                        void onDelete(e);
+                        await tell(`Can’t delete “${e.name}”`, 'It’s used in a program or a past workout, and deleting it would break your history. You can rename it instead.');
+                      } else if (await ask({ title: `Delete “${e.name}”?`, confirmLabel: 'Delete', destructive: true })) {
+                        await onDelete(e);
                       }
                     }}
                   >

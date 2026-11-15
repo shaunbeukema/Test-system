@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
-    "e2e": "bash tests/e2e/run.sh"
+    "e2e": "bash tests/e2e/run.sh",
+    "tour": "bash tests/tour/run.sh"
   },
   "dependencies": {
     "dexie": "^4.4.7",

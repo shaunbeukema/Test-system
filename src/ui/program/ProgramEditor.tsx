@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { addDay, addWeek, duplicateWeek, removeWeek, renameProgram } from '../../core/programEdit';
 import type { Program } from '../../core/types';
 import { NavBar } from '../components/NavBar';
+import { ask } from '../dialog';
 
 interface Props {
   program: Program;
@@ -54,9 +55,9 @@ export function ProgramEditor({ program, isActive, onChange, onOpenDay, onSetAct
                 <button
                   type="button"
                   className="btn btn-danger-text"
-                  onClick={() => {
-                    if (confirm(`Delete Week ${wi + 1} and its days?`)) onChange(removeWeek(program, week.id));
+                  onClick={async () => {
                     setMenuWeek(undefined);
+                    if (await ask({ title: `Delete Week ${wi + 1}?`, message: 'Its days and exercises will be removed.', confirmLabel: 'Delete', destructive: true })) onChange(removeWeek(program, week.id));
                   }}
                 >
                   Delete Week
@@ -87,7 +88,7 @@ export function ProgramEditor({ program, isActive, onChange, onOpenDay, onSetAct
       <button type="button" className="btn btn-secondary btn-block spaced" onClick={() => onChange(addWeek(program))}>
         + Add Empty Week
       </button>
-      <button type="button" className="btn btn-danger-text btn-block" onClick={() => confirm(`Delete “${program.name}”? This can’t be undone.`) && onDelete()}>
+      <button type="button" className="btn btn-danger-text btn-block" onClick={async () => (await ask({ title: `Delete “${program.name}”?`, message: 'This can’t be undone. Past workouts stay in History.', confirmLabel: 'Delete', destructive: true })) && onDelete()}>
         Delete Program
       </button>
     </main>

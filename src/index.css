@@ -741,9 +741,7 @@ ol.list.plain {
   gap: 12px;
   margin: calc(-1 * (env(safe-area-inset-top) + 20px)) -16px 12px;
   padding: calc(env(safe-area-inset-top) + 16px) 16px 12px;
-  background: rgba(242, 242, 239, 0.94);
-  backdrop-filter: saturate(180%) blur(20px);
-  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  background: var(--bg);
   border-bottom: 1px solid var(--line);
 }
 
@@ -1131,4 +1129,97 @@ ol.list.plain {
 
 .summary-hint {
   text-align: center;
+}
+
+/* Align the week "•••" button with the WEEK label */
+.week-header .link-btn {
+  min-height: 32px;
+  line-height: 1;
+}
+
+/* ---------- Dialog (iOS alert style) ---------- */
+.dialog-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(20, 21, 23, 0.45);
+  animation: fade 0.15s ease-out;
+}
+
+.dialog {
+  width: 100%;
+  max-width: 300px;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+  animation: pop 0.18s ease-out;
+}
+
+.dialog-body {
+  padding: 20px 18px 16px;
+  text-align: center;
+}
+
+.dialog-title {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 800;
+  line-height: 1.3;
+  text-wrap: balance;
+}
+
+.dialog-message {
+  margin: 6px 0 0;
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--ink-2);
+}
+
+.dialog-input {
+  margin-top: 14px;
+}
+
+.dialog-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-top: 1px solid var(--line);
+}
+
+.dialog-actions.single {
+  grid-template-columns: 1fr;
+}
+
+.dialog-btn {
+  min-height: 48px;
+  border: none;
+  background: none;
+  color: var(--accent);
+  font-size: 17px;
+}
+
+.dialog-btn + .dialog-btn {
+  border-left: 1px solid var(--line);
+}
+
+.dialog-btn.strong {
+  font-weight: 700;
+}
+
+.dialog-btn.destructive {
+  color: #b3261e;
+}
+
+.dialog-btn:active {
+  background: #ebebe7;
+}
+
+@keyframes pop {
+  from {
+    transform: scale(1.08);
+    opacity: 0;
+  }
 }

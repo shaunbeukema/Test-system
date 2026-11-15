@@ -6,6 +6,7 @@ import { NavBar } from '../components/NavBar';
 import { describeSet, summarizeSets } from '../format';
 import { storage } from '../storage';
 import { ExerciseCard } from '../workout/ExerciseCard';
+import { ask } from '../dialog';
 
 type View = { kind: 'list' } | { kind: 'exercise'; exerciseId: string } | { kind: 'workout'; workoutId: string; fromExerciseId: string };
 
@@ -52,7 +53,7 @@ export function HistoryScreen() {
       );
     }
     const deleteWorkout = async () => {
-      if (!confirm('Delete this workout? This can’t be undone.')) return;
+      if (!(await ask({ title: 'Delete workout?', message: 'This can’t be undone.', confirmLabel: 'Delete', destructive: true }))) return;
       await storage.deleteWorkout(workout.id);
       setWorkouts(workouts.filter((w) => w.id !== workout.id));
       back();

@@ -15,6 +15,7 @@ import { formatDuration } from '../../core/units';
 import { NavBar } from '../components/NavBar';
 import { ExercisePicker } from './ExercisePicker';
 import { PlannedExerciseSheet } from './PlannedExerciseSheet';
+import { ask } from '../dialog';
 
 interface Props {
   program: Program;
@@ -50,8 +51,8 @@ export function DayEditor({ program, dayId, exercises, unit, defaultRestSec, onC
     setEditing(undefined);
   };
 
-  const deleteDay = () => {
-    if (!confirm(`Delete “${day.name}”?`)) return;
+  const deleteDay = async () => {
+    if (!(await ask({ title: `Delete “${day.name}”?`, message: 'Its exercises will be removed from this week.', confirmLabel: 'Delete', destructive: true }))) return;
     onChange(removeDay(program, dayId));
     onBack();
   };

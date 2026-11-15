@@ -4,6 +4,7 @@ import type { Exercise, Program, Workout } from '../../core/types';
 import { startEmptyWorkout, startWorkoutFromDay } from '../../core/workout';
 import { PlayIcon } from '../icons';
 import { storage } from '../storage';
+import { ask } from '../dialog';
 
 interface Props {
   onCreateProgram: () => void;
@@ -54,7 +55,7 @@ export function HomeScreen({ onCreateProgram, onStartWorkout, onBlockComplete, t
   const skip = async () => {
     if (!data?.program || !data.next) return;
     const { program, next } = data;
-    if (!confirm(`Skip Week ${next.weekIndex + 1} · Day ${next.dayIndex + 1}: ${next.day.name}? It counts as missed.`)) return;
+    if (!(await ask({ title: `Skip ${next.day.name}?`, message: `Week ${next.weekIndex + 1} · Day ${next.dayIndex + 1} will count as missed, and the program moves on.`, confirmLabel: 'Skip Day' }))) return;
     await storage.saveWorkout(skipDay(program, next));
     const fresh = await load();
     if (fresh.blockDone) return onBlockComplete(program.id);

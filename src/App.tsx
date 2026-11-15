@@ -2,6 +2,7 @@ import { useCallback, useState, type ReactNode } from 'react';
 import { isBlockComplete } from './core/program';
 import type { Workout } from './core/types';
 import { HistoryIcon, HomeIcon, ProgramIcon, SettingsIcon } from './ui/icons';
+import { DialogHost } from './ui/components/Dialog';
 import { BlockSummaryScreen } from './ui/screens/BlockSummaryScreen';
 import { HomeScreen } from './ui/screens/HomeScreen';
 import { storage } from './ui/storage';
@@ -63,6 +64,7 @@ export default function App() {
   if (summaryFor) {
     return (
       <div className="app">
+        <DialogHost />
         <BlockSummaryScreen programId={summaryFor} onDone={backHome} />
       </div>
     );
@@ -72,6 +74,7 @@ export default function App() {
   if (workout) {
     return (
       <div className="app">
+        <DialogHost />
         <WorkoutScreen
           initial={workout}
           onDone={(message, finished) => void afterWorkout(finished, message)}
@@ -82,6 +85,7 @@ export default function App() {
 
   return (
     <div className="app">
+        <DialogHost />
       {tab === 'home' && (
         <HomeScreen
           key={tabKey}
