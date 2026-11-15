@@ -7,7 +7,7 @@ A personal weightlifting app for iPhone, for one user. It runs a multi-week trai
 | Decision | Choice | Why |
 |---|---|---|
 | App type | Progressive Web App (PWA), installed from Safari to the Home Screen | No Mac needed; free; works offline |
-| Language | TypeScript + React, built with Vite | Type-safe; ready for Capacitor |
+| Language | TypeScript + React, built with Vite; tests with Vitest | Type-safe; ready for Capacitor |
 | Path to native | Capacitor wraps the same code as a real iOS app | No rewrite needed later |
 | Architecture | Logic (`src/core/`) is kept separate from screens (`src/ui/`) | Logic and its tests can be reused or ported to Swift |
 | Storage | On-device (IndexedDB) behind one `Storage` interface | Can be swapped for native storage later |
@@ -63,8 +63,8 @@ A personal weightlifting app for iPhone, for one user. It runs a multi-week trai
 
 ## 5. Look and feel
 
-- **Apple-like, with a rugged, masculine feel.** iOS layout and conventions (system font, clean spacing, familiar navigation), but with more weight:
-  - Light base (off-white) with **charcoal/graphite** surfaces and text; one strong accent color for actions.
+- **Apple-like, with a rugged, masculine feel.** Accent color: **steel blue**. iOS layout and conventions (system font, clean spacing, familiar navigation), but with more weight:
+  - Light base (off-white) with **charcoal/graphite** surfaces and text; steel blue accent for actions.
   - **Bold, heavy type** for headings and numbers (weights, reps, timer); tabular figures so numbers line up.
   - Tighter corner radii (squarer, more "steel plate" than "bubbly"); solid fills over soft gradients.
   - Minimal decoration; no pastels or playful illustrations.
