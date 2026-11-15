@@ -10,7 +10,6 @@ const URL = process.env.LIFTR_URL || 'http://localhost:4173/';
   p.on('pageerror', e => errors.push(e.message));
   p.on('console', m => m.type() === 'error' && errors.push(m.text()));
   p.on('dialog', (d) => { errors.push('Unexpected browser pop-up: ' + d.message()); d.dismiss(); });
-  const accept = async () => { await p.locator('.dialog .dialog-btn.strong').click(); await p.locator('.dialog').waitFor({ state: 'detached' }); };
   const step = (s) => console.log('✓', s);
   await p.goto(URL);
   await p.getByRole('button', { name: 'Create Program' }).click();
