@@ -62,7 +62,9 @@ A personal weightlifting app for iPhone, for one user. It runs a multi-week trai
 
 - **Recommendation:** if every planned working set of an exercise was completed at or above its target reps, recommend *last weight + that exercise's increment* next time. Otherwise, recommend the same weight.
 - **Next workout:** the first uncompleted day in the active program, in order.
-- **End of block:** show a **block summary** (sessions completed, PRs, total volume, consistency), then offer to **repeat the block with updated weights** (from the recommendations).
+- **Skip this day** (Home): marks the next program day as skipped so the program moves on; it counts as missed.
+- **End of block:** right after the last day is finished (or skipped), show a **block summary**: sessions done (e.g. 11 / 12) and days skipped. Buttons: **Repeat Block** (restart at Week 1) and **Done**. If Done, Home keeps a "Block complete · Repeat Block" card.
+- **Repeating keeps progressing:** recommendations come from your latest sessions, so a repeated block starts where you left off.
 - Unit conversion is for display only; data is stored in kg. Display rounding: kg to 0.25, lb to 0.5.
 - Tapping the tab you're already on returns to that tab's main screen (iOS convention).
 
@@ -82,7 +84,7 @@ A personal weightlifting app for iPhone, for one user. It runs a multi-week trai
 2. ✅ **Program editor**: create a multi-week program.
 3. ✅ **Run a workout**: start the next day, prefilled sets, ✓, rest timer, last time, recommendations.
 4. ✅ **Exercise history** + export/import backup.
-5. **Block summary** + repeat block.
+5. ✅ **Block summary** + repeat block + skip a day.
 6. Install on iPhone (Home Screen), polish.
 7. *(Later)* Capacitor native app.
 

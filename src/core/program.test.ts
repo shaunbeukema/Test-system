@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { copyWeek, isBlockComplete, nextDay } from './program';
+import { allDays, blockSummary, copyWeek, isBlockComplete, nextDay, repeatBlock, skipDay } from './program';
 import type { Program, Workout } from './types';
 
 const program: Program = {
@@ -51,5 +51,27 @@ describe('copyWeek', () => {
     expect(copy.days[0].id).not.toBe('d');
     copy.days[0].exercises[0].sets[0].reps = 8;
     expect(src.days[0].exercises[0].sets[0].reps).toBe(5);
+  });
+});
+
+describe('skipping days and the block summary', () => {
+  it('skipping a day moves the program on and counts as missed', () => {
+    const skip = skipDay(program, allDays(program)[1], new Date('2026-11-03T10:00:00Z'));
+    const workouts = [done('d1'), skip];
+    expect(nextDay(program, workouts)?.day.id).toBe('d3');
+    expect(blockSummary(program, workouts)).toEqual({ plannedDays: 3, completedDays: 1, skippedDays: 1 });
+  });
+
+  it('a block can finish with skipped days', () => {
+    const workouts = [done('d1'), skipDay(program, allDays(program)[1], new Date('2026-11-03')), done('d3')];
+    expect(isBlockComplete(program, workouts)).toBe(true);
+    expect(blockSummary(program, workouts)).toEqual({ plannedDays: 3, completedDays: 2, skippedDays: 1 });
+  });
+
+  it('repeating the block starts again at week 1 and resets the summary', () => {
+    const workouts = [done('d1'), done('d2'), done('d3')];
+    const again = repeatBlock(program, new Date('2026-12-01T00:00:00Z'));
+    expect(nextDay(again, workouts)?.day.id).toBe('d1');
+    expect(blockSummary(again, workouts).completedDays).toBe(0);
   });
 });

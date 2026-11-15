@@ -34,6 +34,35 @@ export function isBlockComplete(program: Program, workouts: Workout[]): boolean 
   return allDays(program).length > 0 && nextDay(program, workouts) === undefined;
 }
 
+/** Mark a program day as skipped so the program moves on. Stored as a finished workout with no exercises. */
+export function skipDay(program: Program, ref: DayRef, now = new Date()): Workout {
+  const iso = now.toISOString();
+  return { id: newId(), startedAt: iso, finishedAt: iso, programId: program.id, dayId: ref.day.id, name: ref.day.name, skipped: true, exercises: [] };
+}
+
+export interface BlockSummary {
+  plannedDays: number;
+  completedDays: number;
+  skippedDays: number;
+}
+
+/** Sessions done in the current run of the block. */
+export function blockSummary(program: Program, workouts: Workout[]): BlockSummary {
+  const dayIds = new Set(allDays(program).map((d) => d.day.id));
+  const run = workouts.filter((w) => w.programId === program.id && w.dayId && dayIds.has(w.dayId) && w.finishedAt && w.startedAt >= program.runStartedAt);
+  const completed = new Set(run.filter((w) => !w.skipped).map((w) => w.dayId));
+  const skipped = new Set(run.filter((w) => w.skipped && !completed.has(w.dayId)).map((w) => w.dayId));
+  return { plannedDays: dayIds.size, completedDays: completed.size, skippedDays: skipped.size };
+}
+
+/**
+ * Start the block again from Week 1. Weights keep progressing because recommendations
+ * come from your most recent sessions, not from the run.
+ */
+export function repeatBlock(program: Program, now = new Date()): Program {
+  return { ...program, runStartedAt: now.toISOString() };
+}
+
 /** Deep-copy a week with fresh IDs (for "copy week, then edit"). */
 export function copyWeek(week: ProgramWeek, name: string): ProgramWeek {
   return {

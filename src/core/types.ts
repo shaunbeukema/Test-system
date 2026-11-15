@@ -79,6 +79,8 @@ export interface Workout {
   dayId?: string;
   /** Display name, e.g. the program day name. */
   name?: string;
+  /** True when the program day was skipped (counts as done for "next day", missed in the block summary). */
+  skipped?: boolean;
   exercises: WorkoutExercise[];
   /** The most recently completed set, used to record actual rest when the next set is completed. */
   lastCompleted?: { exerciseIndex: number; setIndex: number; at: string };

@@ -25,8 +25,8 @@ import { useNow } from './useNow';
 
 interface Props {
   initial: Workout;
-  /** Called when the workout is finished or discarded. */
-  onDone: (message?: string) => void;
+  /** Called when the workout is finished (with the saved workout) or discarded. */
+  onDone: (message?: string, finished?: Workout) => void;
 }
 
 export function WorkoutScreen({ initial, onDone }: Props) {
@@ -66,8 +66,9 @@ export function WorkoutScreen({ initial, onDone }: Props) {
       return;
     }
     if (!confirm('Finish workout?')) return;
-    await storage.saveWorkout(finishWorkout(workout));
-    onDone('Workout saved');
+    const finished = finishWorkout(workout);
+    await storage.saveWorkout(finished);
+    onDone('Workout saved', finished);
   };
 
   const discard = async () => {

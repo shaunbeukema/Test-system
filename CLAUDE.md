@@ -22,7 +22,7 @@ A personal weightlifting app for iPhone, built as a Progressive Web App (install
 ## Architecture (keep these boundaries)
 
 - `src/core/`: **pure logic and types**. No React, no browser APIs except `crypto.randomUUID`. Every rule lives here with tests next to it (`*.test.ts`). This layer must stay portable (Capacitor now, possibly Swift later).
-  - `types.ts` data model · `progression.ts` last-time + weight recommendation · `program.ts` next day / copy week · `units.ts` kg/lb + formatting · `programEdit.ts` program editing · `workout.ts` live workout (sets, rest timer, recorded rest) · `history.ts` exercise sessions, best set, usage checks · `exercises.ts` built-in list · `backup.ts` export format · `storage.ts` the `Storage` interface
+  - `types.ts` data model · `progression.ts` last-time + weight recommendation · `program.ts` next day, copy week, skip day, block summary, repeat block · `units.ts` kg/lb + formatting · `programEdit.ts` program editing · `workout.ts` live workout (sets, rest timer, recorded rest) · `history.ts` exercise sessions, best set, usage checks · `exercises.ts` built-in list · `backup.ts` export format · `storage.ts` the `Storage` interface
 - `src/storage/`: `Storage` implementations (`DexieStorage` = IndexedDB). The UI never touches IndexedDB directly.
 - `src/ui/`: React screens and components. `ui/storage.ts` holds the single storage instance.
 - `src/index.css`: theme tokens and styles.
@@ -40,4 +40,4 @@ Apple-like layout with a rugged feel: off-white `--bg`, charcoal/graphite surfac
 
 ## Build phases
 
-See docs/SPEC.md section 6. Phases 1–4 (foundation, program editor, running a workout, history + backup) are done; Phase 5 is the block summary + repeat block.
+See docs/SPEC.md section 6. Phases 1–5 (foundation, program editor, running a workout, history + backup, block summary) are done; Phase 6 is installing on iPhone + polish.

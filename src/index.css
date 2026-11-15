@@ -1060,3 +1060,75 @@ ol.list.plain {
   margin-top: 28px;
   text-align: center;
 }
+
+/* ---------- Home links & block summary ---------- */
+.home-links {
+  display: flex;
+  justify-content: space-between;
+}
+
+.home-links .btn-plain {
+  width: auto;
+  padding: 0 4px;
+}
+
+.spaced-sm {
+  margin-top: 12px;
+}
+
+.summary-screen {
+  padding-top: calc(env(safe-area-inset-top) + 48px);
+}
+
+.summary-title {
+  font-size: 40px;
+}
+
+.summary-hero {
+  padding: 28px 20px 24px;
+  border-radius: var(--radius-lg);
+  background: var(--graphite);
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+}
+
+.summary-hero::after {
+  content: '';
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 6px;
+  background: var(--accent);
+}
+
+.summary-big {
+  font-family: var(--font-display);
+  font-size: 72px;
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.summary-of {
+  font-size: 36px;
+  color: #b7bbc2;
+}
+
+.summary-label {
+  margin-top: 6px;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #b7bbc2;
+}
+
+.summary-skipped {
+  margin-top: 14px;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.summary-hint {
+  text-align: center;
+}
