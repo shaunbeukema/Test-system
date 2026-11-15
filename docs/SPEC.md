@@ -39,9 +39,10 @@ A personal weightlifting app for iPhone, for one user. It runs a multi-week trai
 - A list of the day's exercises. Each set row is **prefilled** from the plan or recommendation; tap ✓ to confirm, or edit if it's different.
 - Under each exercise: **"Last time: 80 kg × 5, 5, 5"**.
 - **Recommendation badge** when it applies: "↑ Try 82.5 kg". You can accept or ignore it.
-- Tapping ✓ starts the **rest countdown** using that exercise's target rest, with an alert at zero. The **actual rest** is recorded when the next set starts.
+- No planned weight and no history → Liftr asks **"Starting weight?"** once for that exercise.
+- Tapping ✓ starts the **rest countdown** using that exercise's target rest, shown as a bar pinned to the bottom (−15 / +15 / Skip); at zero it **flashes** "Rest over — GO". The **actual rest** is recorded when the next set starts.
 - Full flexibility: add, swap, skip, or reorder exercises and sets.
-- Finish → a short summary → saved to history.
+- Finish → "Workout saved" → back to Home (minimal). The workout saves as you go; Home offers **Resume Workout** if the app was closed mid-session.
 
 ### Programs
 - A list of programs; one is active.
@@ -75,7 +76,7 @@ A personal weightlifting app for iPhone, for one user. It runs a multi-week trai
 
 1. ✅ **Foundation**: project skeleton, CLAUDE.md, data model, storage, tests.
 2. ✅ **Program editor**: create a multi-week program.
-3. **Run a workout**: start the next day, prefilled sets, ✓, rest timer, last time, recommendations.
+3. ✅ **Run a workout**: start the next day, prefilled sets, ✓, rest timer, last time, recommendations.
 4. **Exercise history** + export/import backup.
 5. **Block summary** + repeat block.
 6. Install on iPhone (Home Screen), polish.

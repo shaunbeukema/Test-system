@@ -7,7 +7,7 @@ A personal weightlifting app for iPhone, built as a Progressive Web App (install
 - The owner is new to programming. Explain what you're doing in plain English, avoid jargon (or define it), and keep changes small.
 - Guide with questions: when a design choice is open, ask (with options and a recommendation) rather than guessing.
 - Before larger features, propose a short plan and get approval.
-- After each feature: run the tests and build, screenshot the app at iPhone size, and commit.
+- After each feature: run `npm test`, `npm run build`, `npm run lint`, `npm run e2e`, screenshot the app at iPhone size, and commit.
 
 ## Commands
 
@@ -17,11 +17,12 @@ A personal weightlifting app for iPhone, built as a Progressive Web App (install
 - `npm run build`: type-check + production build (outputs `dist/`, including the service worker)
 - `npm run lint`: lint (oxlint)
 - `npm run preview`: serve the production build
+- `npm run e2e`: walkthrough tests in a real iPhone-sized browser (run `npm run build` first). Scripts are in `tests/e2e/`; add one for each new user flow.
 
 ## Architecture (keep these boundaries)
 
 - `src/core/`: **pure logic and types**. No React, no browser APIs except `crypto.randomUUID`. Every rule lives here with tests next to it (`*.test.ts`). This layer must stay portable (Capacitor now, possibly Swift later).
-  - `types.ts` data model · `progression.ts` last-time + weight recommendation · `program.ts` next day / copy week · `units.ts` kg/lb + formatting · `exercises.ts` built-in list · `backup.ts` export format · `storage.ts` the `Storage` interface
+  - `types.ts` data model · `progression.ts` last-time + weight recommendation · `program.ts` next day / copy week · `units.ts` kg/lb + formatting · `programEdit.ts` program editing · `workout.ts` live workout (sets, rest timer, recorded rest) · `exercises.ts` built-in list · `backup.ts` export format · `storage.ts` the `Storage` interface
 - `src/storage/`: `Storage` implementations (`DexieStorage` = IndexedDB). The UI never touches IndexedDB directly.
 - `src/ui/`: React screens and components. `ui/storage.ts` holds the single storage instance.
 - `src/index.css`: theme tokens and styles.
@@ -39,4 +40,4 @@ Apple-like layout with a rugged feel: off-white `--bg`, charcoal/graphite surfac
 
 ## Build phases
 
-See docs/SPEC.md section 6. Phases 1 (foundation) and 2 (program editor) are done; Phase 3 is running a workout.
+See docs/SPEC.md section 6. Phases 1–3 (foundation, program editor, running a workout) are done; Phase 4 is exercise history + backup.

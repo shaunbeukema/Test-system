@@ -64,6 +64,10 @@ export interface SetLog {
 export interface WorkoutExercise {
   exerciseId: string;
   plannedExerciseId?: string;
+  /** Target rest after each set for this exercise, in seconds. */
+  restSec: number;
+  /** Weight suggestion shown when the workout started (from progression rules). */
+  suggestion?: { weightKg: number; increase: boolean };
   sets: SetLog[];
 }
 
@@ -73,7 +77,13 @@ export interface Workout {
   finishedAt?: string;
   programId?: string;
   dayId?: string;
+  /** Display name, e.g. the program day name. */
+  name?: string;
   exercises: WorkoutExercise[];
+  /** The most recently completed set, used to record actual rest when the next set is completed. */
+  lastCompleted?: { exerciseIndex: number; setIndex: number; at: string };
+  /** The running rest countdown, if any. */
+  rest?: { endsAt: string; totalSec: number };
 }
 
 export type WeightUnit = 'kg' | 'lb';

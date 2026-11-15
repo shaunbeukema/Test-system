@@ -6,7 +6,7 @@ const bench: Exercise = { id: 'bench-press', name: 'Bench Press', type: 'weight'
 const plan5x5: PlannedExercise = { id: 'p1', exerciseId: 'bench-press', restSec: 180, sets: Array(5).fill({ reps: 5 }) };
 
 function entry(reps: number[], weightKg = 80): WorkoutExercise {
-  return { exerciseId: 'bench-press', sets: reps.map((r) => ({ weightKg, reps: r, completed: true })) };
+  return { exerciseId: 'bench-press', restSec: 180, sets: reps.map((r) => ({ weightKg, reps: r, completed: true })) };
 }
 
 describe('recommendWeight', () => {
